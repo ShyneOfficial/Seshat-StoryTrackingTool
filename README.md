@@ -10,9 +10,7 @@
 
 # Overview
 
-## Status
-
-🚧 **Research Prototype (PoC)**
+🚧 Status: **Research Prototype (PoC)**
 
 Current version: **v0.0.1**
 
