@@ -1,190 +1,161 @@
-# Seshat
+# Seshat — NLP Pipeline
 
-> **⚠️ Work in Progress**
+> **Work in Progress**
 >
-> This repository contains the early Proof of Concept (PoC) of **Seshat**, a modular story-state engine for writers.
->
-> The project is currently in active development and serves as a research playground to validate its architecture and core concepts before becoming a complete application.
+> This branch contains the first prototype of Seshat’s modular NLP pipeline.
 
 ---
 
 # Overview
 
-🚧 Status: **Research Prototype (PoC)**
+Seshat is a story-state engine designed to help writers track story continuity across chapters.
 
-Current version: **v0.0.1**
+This branch focuses on the **analysis pipeline**: taking raw chapter text and turning it into structured data.
 
-Seshat is an experimental writing assistant designed to help authors maintain the continuity of their stories.
+Current pipeline output includes:
 
-Rather than acting as another worldbuilding wiki or manuscript editor, Seshat aims to understand how a story evolves over time.
-
-By analyzing chapters, it builds a structured representation of the story's current state, allowing authors to easily answer questions such as:
-
-* Which characters have already been introduced?
-* What does the reader know at Chapter 18?
-* Which locations have been explored?
-* What skills has the protagonist learned so far?
-* Which plot elements have already appeared?
-
-The long-term vision is to provide an intelligent continuity layer that sits alongside existing writing tools.
+* Character mentions
+* Location mentions
+* Simple character-location visit links
+* Warnings and errors from analysis modules
 
 ---
 
-# Current Goal
+# Current Architecture
 
-This repository focuses on the first Proof of Concept:
+```txt
+Raw chapter text
+↓
+spaCy Doc
+↓
+Seshat modules
+↓
+AnalysisResult
+```
 
-> Building a modular NLP pipeline capable of extracting structured story information from raw chapter text.
+The pipeline is split into clear parts:
 
-The objective is **not** to create a perfect AI, but to validate the architecture that will power Seshat.
-
----
-
-# Roadmap (Current Proof of Concept)
-
-## Week 1 — NLP Pipeline
-
-Develop a modular NLP pipeline capable of analyzing chapters and extracting structured story events.
-
-The first implementation focuses on two modules.
-
-### Character Module
-
-* Detect known characters
-* Detect newly introduced characters
-* Track character appearances
-* Track the current known location of each character
-* Track visited locations
-
-### Location Module
-
-* Detect known locations
-* Detect newly discovered locations
-* Track explored and visited places
-
-The pipeline should output structured events instead of raw text analysis.
+```txt
+app/
+├── schemas/      # Dataclasses for analysis results
+├── pipeline/     # Pipeline execution and context
+├── modules/      # Entity and link extraction modules
+├── utils/        # Shared helpers
+└── main.py       # Test entry point
+```
 
 ---
 
-## Week 2 — Prototype Website
+# Current Modules
 
-Develop a minimal web application demonstrating the NLP pipeline.
+## CharacterModule
 
-The prototype will include:
+Detects characters using spaCy `PERSON` entities.
 
-* Story management
-* Chapter import / paste
-* NLP analysis
-* Validation and modification of detected events
-* Character browser
-* Location browser
-* Search functionality
-* Hoverable entities displaying contextual information
-* Chapter-based story state visualization
+## LocationModule
 
-The focus is on demonstrating the architecture rather than building a production-ready application.
+Detects locations using:
 
----
+* spaCy location labels: `GPE`, `LOC`, `FAC`
+* simple keyword rules such as `forest`, `city`, `castle`, `river`
 
-# Architecture Vision
+## VisitModule
 
-Seshat is built around a modular architecture.
+Creates a `visit` link when a character and a location appear in the same sentence.
 
-Each module is responsible for a specific aspect of the story.
-
-Examples include:
-
-* Characters
-* Locations
-* Items
-* Skills
-* Quests
-* Lore
-* Factions
-* Relationships
-
-Each module will eventually define:
-
-* Its own data model
-* The events it understands
-* NLP extraction rules
-* Validation logic
-* Story-state update rules
-* User interface components
-
-This architecture allows Seshat to adapt to different genres and writing styles by enabling only the modules relevant to a given story.
+This is temporary and will be improved later with better grammar and movement detection.
 
 ---
 
-# Future Vision
+# Analysis Result
 
-After the NLP proof of concept, future iterations will introduce:
+The pipeline returns an `AnalysisResult` containing:
 
-* AI-assisted (LLM) extraction for ambiguous cases
-* Plugin-based module system
-* Story timeline reconstruction
-* Reader knowledge visualization
-* Continuity checking
-* Narrative consistency reports
-* Story-state snapshots
-* Searchable event history
+```txt
+chapter_id
+entities
+links
+warnings
+errors
+```
 
-The long-term goal is to build a **story-state engine** capable of understanding how a narrative evolves chapter by chapter.
+Entity mentions represent detected characters or locations.
 
----
+Links represent relationships between entities, such as:
 
-# Project Status
-
-Current development status:
-
-* [ ] Modular NLP pipeline
-* [ ] Character Module
-* [ ] Location Module
-* [ ] Event extraction engine
-* [ ] Prototype web interface
-* [ ] Story-state engine
-* [ ] LLM-assisted extraction
-* [ ] Plugin system
+```txt
+Owen visited the forest
+```
 
 ---
 
-# Technologies (Planned)
+# Installation
 
-### Frontend
+```bash
+make setup
+```
 
-* Next.js
-* React
-* TypeScript
-* Tailwind CSS
-* Tiptap
-
-### Backend
-
-* Next.js API
-* Python
-* FastAPI
-
-### NLP
-
-* spaCy
-* Rule-based extraction
-* Custom module extractors
-
-### Database
-
-* PostgreSQL
-* Prisma ORM
+This creates the virtual environment, installs dependencies, and downloads the spaCy model.
 
 ---
 
-# Repository Purpose
+# Run
 
-This repository is primarily intended to experiment with:
+Create an input file:
 
-* Modular software architecture
-* Natural Language Processing
-* Story-state reconstruction
-* Narrative event extraction
-* Chapter-by-chapter continuity tracking
+```txt
+data/input1.txt
+```
 
-Feedback, ideas and contributions are always welcome as Seshat continues to evolve.
+Then run:
+
+```bash
+make run
+```
+
+The current test entry point is:
+
+```txt
+app/main.py
+```
+
+---
+
+# Current Limitations
+
+This is an early prototype.
+
+Known limitations:
+
+* Character detection depends on spaCy.
+* Location detection is partly keyword-based.
+* Visit detection only checks same-sentence matches.
+* No alias resolution yet.
+* No database persistence yet.
+* No validation UI yet.
+
+---
+
+# Next Step
+
+The next step is to add a data-management layer.
+
+Planned flow:
+
+```txt
+AnalysisResult
+↓
+DataManager
+↓
+Database
+```
+
+The database manager will organize analysis results into persistent story data, including:
+
+* Chapters
+* Unique entities
+* Entity mentions
+* Links
+* Link participants
+
+The analysis pipeline should stay separate from database logic.
