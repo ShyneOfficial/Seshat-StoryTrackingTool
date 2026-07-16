@@ -1,0 +1,8 @@
+# requirements.txt
+
+spacy
+fastapi
+uvicorn[standard]
+pydantic
+sqlalchemy
+python-dotenv
