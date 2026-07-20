@@ -1,7 +1,7 @@
 from spacy.tokens import Doc
 
 from app.modules import SeshatModule
-from app.schemas import EntityMention, ModuleResult
+from app.pipeline.schemas import EntityMention, ModuleResult
 from app.pipeline.context import PipelineContext
 from app.utils import make_entity_id
 

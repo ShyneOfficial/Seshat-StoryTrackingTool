@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from app.schemas import EntityMention, EntityType, LinkCandidate, LinkType
+from app.pipeline.schemas import EntityMention, EntityType, LinkCandidate, LinkType
 
 
 @dataclass

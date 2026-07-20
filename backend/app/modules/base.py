@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from spacy.tokens import Doc
 
-from app.schemas import ModuleResult
+from app.pipeline.schemas import ModuleResult
 from app.pipeline.context import PipelineContext
 
 

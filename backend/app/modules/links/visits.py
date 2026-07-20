@@ -1,7 +1,7 @@
 from spacy.tokens import Doc
 
 from app.modules import SeshatModule
-from app.schemas import LinkCandidate, LinkParticipant, ModuleResult
+from app.pipeline.schemas import LinkCandidate, LinkParticipant, ModuleResult
 from app.pipeline.context import PipelineContext
 
 

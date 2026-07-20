@@ -1,7 +1,7 @@
 import spacy
 
 from app.modules import SeshatModule
-from app.schemas import AnalysisResult
+from app.pipeline.schemas import AnalysisResult
 from app.pipeline.context import PipelineContext
 
 

@@ -300,7 +300,7 @@ from spacy.tokens import Doc
 
 from app.modules.base import SeshatModule
 from app.pipeline.context import PipelineContext
-from app.schemas import EntityMention, ModuleResult
+from app.pipeline.schemas import EntityMention, ModuleResult
 from app.utils import make_entity_id
 
 
@@ -459,7 +459,7 @@ from spacy.tokens import Doc
 
 from app.modules.base import SeshatModule
 from app.pipeline.context import PipelineContext
-from app.schemas import EntityMention, ModuleResult
+from app.pipeline.schemas import EntityMention, ModuleResult
 from app.utils import make_entity_id
 
 
@@ -579,7 +579,7 @@ from spacy.tokens import Doc
 
 from app.modules.base import SeshatModule
 from app.pipeline.context import PipelineContext
-from app.schemas import LinkCandidate, LinkParticipant, ModuleResult
+from app.pipeline.schemas import LinkCandidate, LinkParticipant, ModuleResult
 
 
 class ExampleLinkModule(SeshatModule):
@@ -716,7 +716,7 @@ from spacy.tokens import Doc
 
 from app.modules.base import SeshatModule
 from app.pipeline.context import PipelineContext
-from app.schemas import LinkCandidate, LinkParticipant, ModuleResult
+from app.pipeline.schemas import LinkCandidate, LinkParticipant, ModuleResult
 
 
 class OwnershipModule(SeshatModule):

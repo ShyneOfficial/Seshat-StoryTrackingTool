@@ -6,7 +6,7 @@ WORKDIR = app
 PIP = $(VENV)/bin/pip
 PY = $(VENV)/bin/python
 
-.PHONY: setup venv run api fclean request
+.PHONY: setup venv run api clean fclean request
 
 setup: fclean
 	$(PYTHON) -m venv $(VENV)
@@ -30,5 +30,8 @@ request:
 run:
 	$(PY) -m app.main
 
-fclean:
+clean:
+	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
+
+fclean: clean
 	rm -rf $(VENV)
