@@ -1,31 +1,34 @@
-from dataclasses import asdict
-from typing import Any
+from uuid import UUID
 
-from pydantic import BaseModel, Field, field_validator
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, status
 
-from app.api.dependencies import get_nlp_pipeline
-from app.pipeline.nlp import NLPPipeline
-from app.api.schemas import ChapterId
+from app.api.errors import database_not_configured
+from app.api.schemas import AnalysisRunResponse, AnalysisProposalResponse, ProposalReviewRequest
 
 
-router = APIRouter(prefix="/analysis", tags=["analysis"])
-
-class AnalysisRunRequest(BaseModel):
-    chapter_id: ChapterId = Field(examples=["chapter_001"])
-    text: str = Field(min_length=1, examples=["Owen entered the forest."])
-
-    @field_validator("text")
-    @staticmethod
-    def validate_text(value: str) -> str:
-        if not value.strip():
-            raise ValueError("text must not be empty")
-
-        return value
+router = APIRouter(tags=["analysis"])
 
 
-@router.post("/run", summary="Run the NLP pipeline")
-def run_analysis(request: AnalysisRunRequest, pipeline: NLPPipeline = Depends(get_nlp_pipeline)) -> dict[str, Any]:
-    result = pipeline.run(text=request.text, chapter_id=request.chapter_id)
+@router.post("/chapters/{chapter_id}/analysis", response_model=AnalysisRunResponse, status_code=status.HTTP_201_CREATED, summary="Analyze a saved chapter")
+def create_chapter_analysis(chapter_id: UUID) -> AnalysisRunResponse:
+    database_not_configured("analysis")
 
-    return asdict(result)
+
+@router.get("/analysis/{analysis_id}", response_model=AnalysisRunResponse, summary="Get an analysis")
+def get_analysis(analysis_id: UUID) -> AnalysisRunResponse:
+    database_not_configured("analysis")
+
+
+@router.get("/analysis/{analysis_id}/proposals", response_model=list[AnalysisProposalResponse], summary="List analysis proposals")
+def list_analysis_proposals(analysis_id: UUID) -> list[AnalysisProposalResponse]:
+    database_not_configured("analysis proposal")
+
+
+@router.patch("/analysis/{analysis_id}/proposals/{proposal_id}", response_model=AnalysisProposalResponse, summary="Review an analysis proposal")
+def review_analysis_proposal(analysis_id: UUID, proposal_id: UUID, request: ProposalReviewRequest) -> AnalysisProposalResponse:
+    database_not_configured("analysis proposal")
+
+
+@router.post("/analysis/{analysis_id}/apply", response_model=AnalysisRunResponse, summary="Apply accepted analysis proposals")
+def apply_analysis(analysis_id: UUID) -> AnalysisRunResponse:
+    database_not_configured("analysis")

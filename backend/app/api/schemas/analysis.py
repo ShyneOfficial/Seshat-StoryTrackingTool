@@ -4,12 +4,6 @@ from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, Field, ConfigDict, model_validator
-from fastapi import APIRouter, status
-
-from app.api.errors import database_not_configured
-
-
-router = APIRouter(tags=["analyses"])
 
 class AnalysisStatus(str, Enum):
     PENDING = "pending"
@@ -19,6 +13,7 @@ class AnalysisStatus(str, Enum):
     APPLIED = "applied"
     STALE = "stale"
 
+
 class ProposalStatus(str, Enum):
     PENDING = "pending"
     ACCEPTED = "accepted"
@@ -26,12 +21,14 @@ class ProposalStatus(str, Enum):
     EDITED = "edited"
     APPLIED = "applied"
 
+
 class ProposalDecision(str, Enum):
     ACCEPT = "accept"
     REJECT = "reject"
     EDIT = "edit"
 
-class AnalysisResult(BaseModel):
+
+class AnalysisRunResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
@@ -47,7 +44,8 @@ class AnalysisResult(BaseModel):
     completed_at: datetime | None = None
     applied_at: datetime | None = None
 
-class AnalysisProposalRead(BaseModel):
+
+class AnalysisProposalResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
@@ -78,27 +76,3 @@ class ProposalReviewRequest(BaseModel):
             raise ValueError("edited_payload can only be provided when decision is 'edit'")
 
         return self
-
-@router.post("/chapters/{chapter_id}/analyses", response_model=AnalysisResult, status_code=status.HTTP_201_CREATED, summary="Analyze a saved chapter")
-def create_chapter_analysis(chapter_id: UUID) -> AnalysisResult:
-    database_not_configured("analysis")
-
-
-@router.get("/analyses/{analysis_id}", response_model=AnalysisResult, summary="Get an analysis")
-def get_analysis(analysis_id: UUID) -> AnalysisResult:
-    database_not_configured("analysis")
-
-
-@router.get("/analyses/{analysis_id}/proposals", response_model=list[AnalysisProposalRead], summary="List analysis proposals")
-def list_analysis_proposals(analysis_id: UUID) -> list[AnalysisProposalRead]:
-    database_not_configured("analysis proposal")
-
-
-@router.patch("/analyses/{analysis_id}/proposals/{proposal_id}", response_model=AnalysisProposalRead, summary="Review an analysis proposal")
-def review_analysis_proposal(analysis_id: UUID, proposal_id: UUID, request: ProposalReviewRequest) -> AnalysisProposalRead:
-    database_not_configured("analysis proposal")
-
-
-@router.post("/analyses/{analysis_id}/apply", response_model=AnalysisResult, summary="Apply accepted analysis proposals")
-def apply_analysis(analysis_id: UUID) -> AnalysisResult:
-    database_not_configured("analysis")

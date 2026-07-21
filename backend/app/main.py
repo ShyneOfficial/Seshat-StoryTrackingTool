@@ -1,9 +1,7 @@
 from dataclasses import asdict
 from pprint import pprint
 
-from app.modules.entities import CharacterModule, LocationModule
-from app.modules.links import VisitModule
-from app.pipeline.nlp import NLPPipeline
+from app.pipeline.factory import create_nlp_pipeline
 
 
 def load_text(path: str) -> str:
@@ -14,15 +12,7 @@ def load_text(path: str) -> str:
 def main() -> None:
     path = "data/input1.txt"
     text = load_text(path)
-    pipeline = NLPPipeline()
-
-    ############################################################
-    ##### Entity modules MUST execute before link modules. #####
-    ############################################################
-    pipeline.add_module(CharacterModule())
-    pipeline.add_module(LocationModule())
-
-    pipeline.add_module(VisitModule())
+    pipeline = create_nlp_pipeline()
 
     result = pipeline.run(text=text, chapter_id="chapter_001")
 

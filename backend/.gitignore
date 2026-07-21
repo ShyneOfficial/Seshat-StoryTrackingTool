@@ -8,5 +8,4 @@ __pycache__/
 *.sqlite
 
 data/
-app/db/
 folder_dump.txt

@@ -6,7 +6,7 @@ WORKDIR = app
 PIP = $(VENV)/bin/pip
 PY = $(VENV)/bin/python
 
-.PHONY: setup venv run api clean fclean request
+.PHONY: setup venv run api clean fclean
 
 setup: fclean
 	$(PYTHON) -m venv $(VENV)
@@ -20,15 +20,10 @@ venv:
 	@echo "source $(VENV)/bin/activate.fish"
 
 api:
-	.venv/bin/python -m uvicorn app.server:app \
+	$(PY) -m uvicorn app.server:app \
     --host 0.0.0.0 \
     --port 8050 \
     --reload
-
-request:
-	curl -s -X POST http://127.0.0.1:8050/analysis/run \
-  	-H "Content-Type: application/json" \
-  	-d @requests/analysis_test.json | python3 -m json.tool
 
 run:
 	$(PY) -m app.main
