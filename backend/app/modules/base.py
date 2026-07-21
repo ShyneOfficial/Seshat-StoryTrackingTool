@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from spacy.tokens import Doc
 
 from app.pipeline.schemas import ModuleResult

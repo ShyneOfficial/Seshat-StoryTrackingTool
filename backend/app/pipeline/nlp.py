@@ -13,7 +13,7 @@ class NLPPipeline:
     def add_module(self, module: SeshatModule) -> None:
         self.modules.append(module)
 
-    def analyze(self, text: str, chapter_id: str) -> AnalysisResult:
+    def run(self, text: str, chapter_id: str) -> AnalysisResult:
         doc = self.nlp(text)
 
         context = PipelineContext(text=text, chapter_id=chapter_id)

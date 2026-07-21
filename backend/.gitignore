@@ -1,9 +1,12 @@
 .venv/
 __pycache__/
 *.pyc
-*.env.*
+.env
+.env.*
+!.env.example
 *.db
 *.sqlite
 
 data/
+app/db/
 folder_dump.txt

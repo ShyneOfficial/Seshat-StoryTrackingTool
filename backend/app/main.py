@@ -14,14 +14,17 @@ def load_text(path: str) -> str:
 def main() -> None:
     path = "data/input1.txt"
     text = load_text(path)
-
     pipeline = NLPPipeline()
 
+    ############################################################
+    ##### Entity modules MUST execute before link modules. #####
+    ############################################################
     pipeline.add_module(CharacterModule())
     pipeline.add_module(LocationModule())
+
     pipeline.add_module(VisitModule())
 
-    result = pipeline.analyze(text=text, chapter_id="chapter_001")
+    result = pipeline.run(text=text, chapter_id="chapter_001")
 
     pprint(asdict(result))
 

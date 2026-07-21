@@ -4,5 +4,7 @@ spacy
 fastapi
 uvicorn[standard]
 pydantic
+pydantic-settings
 sqlalchemy
-python-dotenv
+alembic
+psycopg[binary]

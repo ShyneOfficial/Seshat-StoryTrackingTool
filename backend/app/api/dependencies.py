@@ -1,18 +1,20 @@
+from functools import lru_cache
+
 from app.modules.entities import CharacterModule, LocationModule
 from app.modules.links import VisitModule
 from app.pipeline.nlp import NLPPipeline
 
 
-_pipeline: NLPPipeline | None = None
+@lru_cache
+def get_nlp_pipeline() -> NLPPipeline:
+    pipeline = NLPPipeline()
 
+    ############################################################
+    #####  Entity modules MUST execute before link modules #####
+    ############################################################
+    pipeline.add_module(CharacterModule())
+    pipeline.add_module(LocationModule())
 
-def get_pipeline() -> NLPPipeline:
-    global _pipeline
+    pipeline.add_module(VisitModule())
 
-    if _pipeline is None:
-        _pipeline = NLPPipeline()
-        _pipeline.add_module(CharacterModule())
-        _pipeline.add_module(LocationModule())
-        _pipeline.add_module(VisitModule())
-
-    return _pipeline
+    return pipeline
